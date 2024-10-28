@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "name": "Apple",
+    "category": "Fruit",
+    "price": 0.5,
+    "quantity": 100,
+    "description": "A sweet, edible fruit produced by an apple tree."
+  },
+  {
+    "id": 2,
+    "name": "Banana",
+    "category": "Fruit",
+    "price": 0.3,
+    "quantity": 150,
+    "description": "A long, curved fruit that grows in clusters and has soft pulpy flesh and yellow skin when ripe."
+  },
+  {
+    "id": 3,
+    "name": "Carrot",
+    "category": "Vegetable",
+    "price": 0.2,
+    "quantity": 200,
+    "description": "A tapering orange-colored root eaten as a vegetable."
+  },
+  {
+    "id": 4,
+    "name": "Broccoli",
+    "category": "Vegetable",
+    "price": 1.0,
+    "quantity": 75,
+    "description": "An edible green plant in the cabbage family whose large flowering head is eaten as a vegetable."
+  },
+  {
+    "id": 5,
+    "name": "Chicken Breast",
+    "category": "Meat",
+    "price": 3.0,
+    "quantity": 50,
+    "description": "A lean cut of meat taken from the pectoral muscle on the underside of the chicken."
+  },
+  {
+    "id": 6,
+    "name": "Salmon",
+    "category": "Fish",
+    "price": 5.0,
+    "quantity": 30,
+    "description": "A popular food fish known for its pink flesh and rich flavor."
+  },
+  {
+    "id": 7,
+    "name": "Milk",
+    "category": "Dairy",
+    "price": 1.2,
+    "quantity": 100,
+    "description": "A white liquid produced by the mammary glands of mammals, commonly consumed by humans."
+  },
+  {
+    "id": 8,
+    "name": "Eggs",
+    "category": "Dairy",
+    "price": 2.0,
+    "quantity": 200,
+    "description": "An oval or round object laid by a female bird, reptile, fish, or invertebrate, usually containing a developing embryo."
+  },
+  {
+    "id": 9,
+    "name": "Bread",
+    "category": "Bakery",
+    "price": 1.5,
+    "quantity": 80,
+    "description": "A staple food prepared from a dough of flour and water, usually by baking."
+  },
+  {
+    "id": 10,
+    "name": "Rice",
+    "category": "Grain",
+    "price": 0.8,
+    "quantity": 100,
+    "description": "A staple food for a large part of the world's human population, especially in Asia."
+  }
+]

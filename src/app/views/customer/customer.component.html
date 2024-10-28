@@ -1,0 +1,32 @@
+<div class="container mx-auto p-6">
+  <div
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6"
+  >
+    <div
+      class="card bg-gray-400 rounded-lg shadow-lg overflow-hidden transform transition-transform duration-300 hover:scale-105"
+      id="product-card"
+      *ngFor="let data of data; let i = index"
+    >
+      <figure class="relative">
+        <img
+          class="w-full h-64 object-cover"
+          src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
+          alt="{{ data.name }}"
+        />
+      </figure>
+      <div class="p-6">
+        <h2 class="text-xl font-semibold mb-2 truncate">{{ data.name }}</h2>
+        <p class="mb-4 text-sm">{{ data.description }}</p>
+        <div class="flex justify-between items-center">
+          <span class="text-lg font-bold">${{ data.price }}</span>
+          <button
+            class="btn btn-primary px-4 py-2 rounded-lg font-semibold transition-colors duration-300 hover:bg-blue-700"
+            (click)="addToCart(data.id)"
+          >
+            Add To Cart
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

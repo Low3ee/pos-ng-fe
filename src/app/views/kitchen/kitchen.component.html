@@ -1,0 +1,6 @@
+<div *ngIf="!isInitialized" (click)="initializeAudio()">
+  <button>Click to enable notifications</button>
+</div>
+<div *ngIf="isInitialized">
+  <h1 id="customerId"></h1>
+</div>

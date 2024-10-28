@@ -1,0 +1,83 @@
+<div
+  class="flex justify-center items-center h-screen"
+  id="login"
+  *ngIf="showLogin"
+>
+  <form
+    [formGroup]="loginForm"
+    method="post"
+    (ngSubmit)="loginUser()"
+    class="flex flex-col gap-3"
+  >
+    <h1>Log In</h1>
+    <input
+      type="text"
+      name=""
+      id=""
+      formControlName="email"
+      placeholder="Email or Username"
+      class="border border-black rounded-md p-2"
+    />
+    <input
+      type="password"
+      name=""
+      id=""
+      formControlName="_password"
+      placeholder="Password"
+      class="border border-black rounded-md p-2"
+    />
+    <input
+      type="submit"
+      value="Log in"
+      class="bg-green-500 border rounded-md text-white p-1"
+    />
+    <a (click)="toggleView()">register here</a>
+  </form>
+</div>
+
+<div
+  class="flex justify-center items-center h-screen"
+  id="register"
+  *ngIf="!showLogin"
+>
+  <form
+    [formGroup]="registerForm"
+    method="post"
+    class="flex flex-col gap-3"
+    (ngSubmit)="registerUser()"
+  >
+    <h1>Register</h1>
+
+    <input
+      type="text"
+      name="fullName"
+      id="fullName"
+      formControlName="fullName"
+      placeholder="Full Name"
+      class="border border-black rounded-md p-2"
+    />
+
+    <input
+      type="text"
+      name="email"
+      formControlName="email"
+      id="email"
+      placeholder="Email"
+      class="border border-black rounded-md p-2"
+    />
+    <input
+      type="password"
+      name="password"
+      formControlName="password"
+      id="password"
+      placeholder="Password"
+      class="border border-black rounded-md p-2"
+    />
+    <input
+      type="submit"
+      value="Register"
+      class="bg-green-500 border rounded-md text-white p-1"
+    />
+    <a (click)="toggleView()">Login here</a>
+  </form>
+</div>

@@ -1,1 +1,19 @@
-/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  height: 100%;
+}
+html[data-theme="light"] {
+  @apply bg-base-100 text-base-content;
+}
+
+html[data-theme="dark"] {
+  @apply bg-base-300 text-neutral-content;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
