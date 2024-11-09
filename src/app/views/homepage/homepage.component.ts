@@ -59,4 +59,5 @@ export class HomepageComponent implements OnInit {
       }
     }, 500); // Adjust delay as necessary
   }
+  
 }

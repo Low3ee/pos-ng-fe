@@ -23,22 +23,28 @@ export class UserService {
   public loginUser(user: any) {
     return this.http.post<any>(`${this.apiUrl}/login`, user, {
       headers: this.headers,
+      withCredentials: true,
     });
-  }
+}
 
-  public validateToken() {
-    this.http
-      .get<any>(`${this.apiUrl}/validate_token`, { withCredentials: true })
-      .subscribe(
-        (response) => {
-          console.log(response);
-          if (!response.isValid) {
-            this.router.navigate(['/auth']);
-          }
-        },
-        (error) => {
+
+public validateToken() {
+  this.http
+    .get<any>(`${this.apiUrl}/validate_token`, { withCredentials: true }) 
+    .subscribe(
+      (response) => {
+        console.log('response:', response);
+        if (!response.isValid) {
           this.router.navigate(['/auth']);
         }
-      );
-  }
+        this.router.navigate(['/'])
+        
+      },
+      (error) => {
+        console.log('Error during request:', error);
+        this.router.navigate(['/auth']);
+      }
+    );
+}
+
 }
