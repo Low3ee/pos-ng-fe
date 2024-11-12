@@ -1,24 +1,34 @@
-import { NgIf } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
   FormBuilder,
-  FormControl,
   FormGroup,
-  ReactiveFormsModule,
   Validators,
-} from '@angular/forms';
+  ReactiveFormsModule,
+} from '@angular/forms';  
 import { Router } from '@angular/router';
 import { UserService } from '../../services/api/user/user.service';
+import { NgIf, NgStyle } from '@angular/common';
+import { ThemeService } from '../../services/theme/theme-service.service';
 
 @Component({
   selector: 'app-auth',
   standalone: true,
-  imports: [ReactiveFormsModule, NgIf],
+  imports: [ReactiveFormsModule, NgIf, NgStyle],
   templateUrl: './auth.component.html',
-  styleUrl: './auth.component.css',
+  styleUrls: ['./auth.component.css'],
 })
 export class AuthComponent implements OnInit {
   showLogin = true;
+  loading = false;
+  errorMessage: string | null = null;
+  successMessage: string | null = null;
+  isDarkTheme: boolean =  document.documentElement.getAttribute('data-theme') == 'dark' ? true : false;
+
+  #theme: ThemeService = inject(ThemeService);
+
+  registerForm: FormGroup;
+  loginForm: FormGroup;
+
   constructor(
     private router: Router,
     private userService: UserService,
@@ -36,41 +46,77 @@ export class AuthComponent implements OnInit {
     });
   }
 
-  registerForm: FormGroup;
-  loginForm: FormGroup;
-
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.isDarkTheme = this.#theme.isDarkThemeActive();
+  }
 
   toggleView() {
     this.showLogin = !this.showLogin;
+    this.errorMessage = null;
+    this.successMessage = null;
   }
 
+  // Register user
   registerUser() {
-    let user = this.registerForm.value;
-    // if (this.registerForm.valid) {
-    this.userService.registerUser(user).subscribe((response: any) => {
-      console.log(response);
-      if (response.success) {
-        // this.router.navigate(['/']);
-        this.loginForm.setValue({
-          email: user.email,
-          password: user.password,
-        });
-        this.loginUser();
+    const user = this.registerForm.value;
+    if (this.registerForm.invalid) {
+      this.errorMessage = 'Please fill all required fields correctly.';
+      return;
+    }
+
+    this.loading = true;
+    this.userService.registerUser(user).subscribe(
+      (response: any) => {
+        this.loading = false;
+        if (response.success) {
+          this.successMessage = 'Registration successful! Redirecting to login...';
+          this.loginForm.setValue({
+            email: user.email,
+            _password: user.password,
+          });
+          this.showLogin = true;
+        }
+      },
+      (error) => {
+        this.loading = false;
+        this.errorMessage = error?.message || 'An error occurred during registration. Please try again.';
       }
-    });
-    // }
+    );
   }
 
+  // Login user
   loginUser() {
-    let user = this.loginForm.value;
-    console.log(user);
-    this.userService.loginUser(user).subscribe((response: any) => {
-      console.log(response);
-      if (response.success) {
-        console.log('success');
-        this.router.navigate(['/']);
+    const user = this.loginForm.value;
+    if (this.loginForm.invalid) {
+      this.errorMessage = 'Please fill all required fields correctly.';
+      return;
+    }
+
+    this.loading = true;
+    this.userService.loginUser(user).subscribe(
+      (response: any) => {
+        this.loading = false;
+        if (response.success) {
+          this.successMessage = 'Login successful!';
+          this.router.navigate(['/']);
+        }
+      },
+      (error) => {
+        this.loading = false;
+        this.errorMessage = error?.message || 'Invalid credentials. Please try again.';
       }
-    });
+    );
+  }
+
+  // Helper function to check form field validity
+  getFieldErrorMessage(form: FormGroup, field: string): string {
+    const control = form.get(field);
+    if (control?.hasError('required')) {
+      return `${field} is required`;
+    }
+    if (control?.hasError('email')) {
+      return 'Please enter a valid email address';
+    }
+    return '';
   }
 }

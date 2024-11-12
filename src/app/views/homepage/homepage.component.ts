@@ -1,20 +1,19 @@
 import { NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { QRCodeModule } from 'angularx-qrcode';
 import { UserService } from '../../services/api/user/user.service';
 
 @Component({
   selector: 'app-homepage',
   standalone: true,
-  imports: [RouterLink, QRCodeModule, NgIf],
+  imports: [QRCodeModule, NgIf],
   templateUrl: './homepage.component.html',
   styleUrl: './homepage.component.css',
 })
 export class HomepageComponent implements OnInit {
   qrData: string = '';
   showQRCode: boolean = false;
-  name = 'Balay ni nilo';
+  name = 'Restaurant POS';
 
   constructor(private userService: UserService) {}
 

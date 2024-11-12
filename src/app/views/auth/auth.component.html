@@ -2,82 +2,139 @@
   class="flex justify-center items-center h-screen"
   id="login"
   *ngIf="showLogin"
+  
 >
   <form
+  [ngStyle]="{
+    'background-color': isDarkTheme ? '#333' : '#f0f4f8',
+    'color': isDarkTheme ? '#fff' : '#333'
+  }"
     [formGroup]="loginForm"
     method="post"
     (ngSubmit)="loginUser()"
-    class="flex flex-col gap-3"
+    class="flex flex-col gap-6 p-6 rounded-lg shadow-lg w-full max-w-sm"
   >
-    <h1>Log In</h1>
-    <input
-      type="text"
-      name=""
-      id=""
-      formControlName="email"
-      placeholder="Email or Username"
-      class="border border-black rounded-md p-2"
-    />
-    <input
-      type="password"
-      name=""
-      id=""
-      formControlName="_password"
-      placeholder="Password"
-      class="border border-black rounded-md p-2"
-    />
-    <input
-      type="submit"
-      value="Log in"
-      class="bg-green-500 border rounded-md text-white p-1"
-    />
-    <a (click)="toggleView()">register here</a>
+    <h1 class="text-2xl font-semibold text-center mb-4">Log In</h1>
+
+    <div>
+      <input
+        type="text"
+        formControlName="email"
+        placeholder="Email or Username"
+        class="w-full border border-gray-300 rounded-md p-3 focus:ring-2 focus:ring-green-500"
+      />
+    </div>
+
+    <div>
+      <input
+        type="password"
+        formControlName="_password"
+        placeholder="Password"
+        class="w-full border border-gray-300 rounded-md p-3 focus:ring-2 focus:ring-green-500"
+      />
+    </div>
+
+    <div *ngIf="errorMessage" class="text-red-500 text-center">
+      {{ errorMessage }}
+    </div>
+
+    <div *ngIf="successMessage" class="text-green-500 text-center">
+      {{ successMessage }}
+    </div>
+
+    <div>
+      <input
+        type="submit"
+        value="Log in"
+        class="w-full bg-green-500 text-white rounded-md p-3 mt-4 hover:bg-green-600 transition duration-200"
+      />
+    </div>
+
+    <div class="text-center mt-4">
+      <p class="text-sm text-gray-500">Don't have an account?</p>
+      <a
+        href="javascript:void(0)"
+        (click)="toggleView()"
+        class="text-green-500 hover:text-green-600"
+      >
+        Register here
+      </a>
+    </div>
   </form>
 </div>
 
+<!-- Register Form -->
 <div
   class="flex justify-center items-center h-screen"
   id="register"
   *ngIf="!showLogin"
+ 
 >
   <form
+  [ngStyle]="{
+    'background-color': isDarkTheme ? '#333' : '#f0f4f8',
+    'color': isDarkTheme ? '#fff' : '#333'
+  }"
     [formGroup]="registerForm"
     method="post"
-    class="flex flex-col gap-3"
     (ngSubmit)="registerUser()"
+    class="flex flex-col gap-6 p-6 rounded-lg shadow-lg w-full max-w-sm"
+    
   >
-    <h1>Register</h1>
+    <h1 class="text-2xl font-semibold text-center mb-4">Register</h1>
 
-    <input
-      type="text"
-      name="fullName"
-      id="fullName"
-      formControlName="fullName"
-      placeholder="Full Name"
-      class="border border-black rounded-md p-2"
-    />
+    <div>
+      <input
+        type="text"
+        formControlName="fullName"
+        placeholder="Full Name"
+        class="w-full border border-gray-300 rounded-md p-3 focus:ring-2 focus:ring-green-500"
+      />
+    </div>
 
-    <input
-      type="text"
-      name="email"
-      formControlName="email"
-      id="email"
-      placeholder="Email"
-      class="border border-black rounded-md p-2"
-    />
-    <input
-      type="password"
-      name="password"
-      formControlName="password"
-      id="password"
-      placeholder="Password"
-      class="border border-black rounded-md p-2"
-    />
-    <input
-      type="submit"
-      value="Register"
-      class="bg-green-500 border rounded-md text-white p-1"
-    />
-    <a (click)="toggleView()">Login here</a>
+    <div>
+      <input
+        type="text"
+        formControlName="email"
+        placeholder="Email"
+        class="w-full border border-gray-300 rounded-md p-3 focus:ring-2 focus:ring-green-500"
+      />
+    </div>
+
+    <div>
+      <input
+        type="password"
+        formControlName="password"
+        placeholder="Password"
+        class="w-full border border-gray-300 rounded-md p-3 focus:ring-2 focus:ring-green-500"
+      />
+    </div>
+
+    <div *ngIf="errorMessage" class="text-red-500 text-center">
+      {{ errorMessage }}
+    </div>
+
+    <div *ngIf="successMessage" class="text-green-500 text-center">
+      {{ successMessage }}
+    </div>
+
+    <div>
+      <input
+        type="submit"
+        value="Register"
+        class="w-full bg-green-500 text-white rounded-md p-3 mt-4 hover:bg-green-600 transition duration-200"
+      />
+    </div>
+
+    <div class="text-center mt-4">
+      <p class="text-sm text-gray-500">Already have an account?</p>
+      <a
+        href="javascript:void(0)"
+        (click)="toggleView()"
+        class="text-green-500 hover:text-green-600"
+      >
+        Login here
+      </a>
+    </div>
   </form>
 </div>

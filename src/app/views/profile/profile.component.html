@@ -1,0 +1,161 @@
+<div class="profile-container p-6 max-w-4xl mx-auto bg-blue-300 shadow-md rounded-lg mt-10">
+    <h1 class="text-3xl font-semibold mb-6">Your Profile</h1>
+  
+    <!-- Tab Navigation -->
+    <div class="mb-4 border-b border-gray-300">
+      <ul class="flex space-x-4">
+        <li>
+          <button
+            (click)="activeTab = 'profile'"
+            [ngClass]="{ 'border-b-2 border-blue-500': activeTab === 'profile' }"
+            class="text-lg font-medium text-gray-700 hover:text-blue-600 pb-2"
+          >
+            Profile
+          </button>
+        </li>
+        <li>
+          <button
+            (click)="activeTab = 'payment'"
+            [ngClass]="{ 'border-b-2 border-blue-500': activeTab === 'payment' }"
+            class="text-lg font-medium text-gray-700 hover:text-blue-600 pb-2"
+          >
+            Payment Methods
+          </button>
+        </li>
+        <li>
+          <button
+            (click)="activeTab = 'orders'"
+            [ngClass]="{ 'border-b-2 border-blue-500': activeTab === 'orders' }"
+            class="text-lg font-medium text-gray-700 hover:text-blue-600 pb-2"
+          >
+            Order History
+          </button>
+        </li>
+      </ul>
+    </div>
+  
+    <!-- Profile Tab Content -->
+    <div *ngIf="activeTab === 'profile'" class="mb-8">
+      <div *ngIf="!isEditing">
+        <h2 class="text-2xl font-medium mb-4">Profile Information</h2>
+        <p><strong>Full Name:</strong> {{ profile.fullName }}</p>
+        <p><strong>Email:</strong> {{ profile.email }}</p>
+        <p><strong>Phone Number:</strong> {{ profile.phone }}</p>
+  
+        <button
+          (click)="toggleEditMode()"
+          class="mt-4 bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
+        >
+          Edit Profile
+        </button>
+      </div>
+  
+      <div *ngIf="isEditing">
+        <h2 class="text-2xl font-medium mb-4">Edit Your Information</h2>
+        <form [formGroup]="profileForm" (ngSubmit)="updateProfile()" class="space-y-6">
+          <div>
+            <label for="fullName" class="block text-sm font-medium text-gray-700">Full Name</label>
+            <input
+              type="text"
+              id="fullName"
+              formControlName="fullName"
+              class="w-full p-3 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+          </div>
+  
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+            <input
+              type="email"
+              id="email"
+              formControlName="email"
+              class="w-full p-3 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+          </div>
+  
+          <div>
+            <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number</label>
+            <input
+              type="text"
+              id="phone"
+              formControlName="phone"
+              class="w-full p-3 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+          </div>
+  
+          <button
+            type="submit"
+            [disabled]="profileForm.invalid"
+            class="w-full bg-green-500 text-white p-3 rounded-md mt-4 hover:bg-green-600"
+          >
+            Save Changes
+          </button>
+        </form>
+  
+        <button
+          (click)="toggleEditMode()"
+          class="mt-4 bg-gray-500 text-white p-2 rounded-md hover:bg-gray-600"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  
+    <!-- Payment Methods Tab Content -->
+    <div *ngIf="activeTab === 'payment'" class="mb-8">
+      <h2 class="text-2xl font-medium mb-4">Payment Methods</h2>
+      <div *ngIf="hasPaymentMethods()">
+        <ul class="space-y-4">
+          <li *ngFor="let card of paymentMethods">
+            <div class="flex justify-between items-center">
+              <p class="text-sm font-medium text-gray-700">{{ card.brand }} ending in {{ card.last4 }}</p>
+              <button
+                (click)="removeCard(card.id)"
+                class="text-red-500 hover:text-red-700"
+              >
+                Remove
+              </button>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div *ngIf="!hasPaymentMethods()">
+        <p class="text-sm text-gray-500">No payment methods added.</p>
+      </div>
+  
+      <button
+        (click)="addCard()"
+        class="w-full bg-blue-500 text-white p-3 rounded-md mt-4 hover:bg-blue-600"
+      >
+        Add Payment Method
+      </button>
+    </div>
+  
+    <!-- Order History Tab Content -->
+    <div *ngIf="activeTab === 'orders'" class="mb-8">
+      <h2 class="text-2xl font-medium mb-4">Order History</h2>
+      <div *ngIf="orders.length > 0">
+        <ul class="space-y-4">
+          <li *ngFor="let order of orders">
+            <div class="flex justify-between items-center border-b pb-4 mb-4">
+              <div>
+                <p class="text-sm font-medium text-gray-700">Order ID: {{ order.id }}</p>
+                <p class="text-sm text-gray-500">Placed on: {{order.date}}</p>
+                <p class="text-sm text-gray-500">Total: {{ order.totalAmount }}</p>
+              </div>
+              <button
+                (click)="viewOrderDetails(order.id)"
+                class="text-blue-500 hover:text-blue-700"
+              >
+                View Details
+              </button>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div *ngIf="orders.length === 0">
+        <p class="text-sm text-gray-500">No orders placed yet.</p>
+      </div>
+    </div>
+  </div>
+  

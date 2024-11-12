@@ -11,8 +11,8 @@ import { CartService } from '../../services/cart/cart.service';
   selector: 'app-customer',
   standalone: true,
   imports: [NgFor],
-  templateUrl: './customer.component.html',
-  styleUrl: './customer.component.css',
+  templateUrl: './orderpage.component.html',
+  styleUrl: './orderpage.component.css',
 })
 export class CustomerComponent implements OnInit {
   id: any;
