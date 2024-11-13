@@ -1,32 +1,86 @@
-<div class="container mx-auto p-6">
-  <div
-    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6"
-  >
+<div class="container mx-auto p-6 bg-cream-50">
+  <!-- Category Filter Section -->
+  <div class="mb-6 flex justify-center gap-4">
+    <button
+      class="btn-category px-6 py-2 rounded-lg font-semibold transition-colors duration-300 hover:bg-cafe-orange hover:text-white"
+      (click)="filterByCategory('COFFEE')"
+    >
+      Coffee
+    </button>
+    <button
+      class="btn-category px-6 py-2 rounded-lg font-semibold transition-colors duration-300 hover:bg-cafe-orange hover:text-white"
+      (click)="filterByCategory('TEA')"
+    >
+      Tea
+    </button>
+    <button
+      class="btn-category px-6 py-2 rounded-lg font-semibold transition-colors duration-300 hover:bg-cafe-orange hover:text-white"
+      (click)="filterByCategory('PASTRY')"
+    >
+      Pastries
+    </button>
+    <button
+      class="btn-category px-6 py-2 rounded-lg font-semibold transition-colors duration-300 hover:bg-cafe-orange hover:text-white"
+      (click)="filterByCategory('DESSERT')"
+    >
+      Desserts
+    </button>
+    <button
+      class="btn-category px-6 py-2 rounded-lg font-semibold transition-colors duration-300 hover:bg-cafe-orange hover:text-white"
+      (click)="resetFilter()"
+    >
+      All Products
+    </button>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="flex justify-center items-center">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Product Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
     <div
-      class="card bg-gray-400 rounded-lg shadow-lg overflow-hidden transform transition-transform duration-300 hover:scale-105"
+      class="card bg-white rounded-xl shadow-xl overflow-hidden transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
+      *ngFor="let product of filteredData"
       id="product-card"
-      *ngFor="let data of data; let i = index"
     >
       <figure class="relative">
         <img
-          class="w-full h-64 object-cover"
-          src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-          alt="{{ data.name }}"
+          class="w-full h-64 object-cover transform transition-transform duration-200 hover:scale-105"
+          [src]="product.imageUrl || 'https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp'"
+          alt="{{ product.name }}"
         />
       </figure>
+
       <div class="p-6">
-        <h2 class="text-xl font-semibold mb-2 truncate">{{ data.name }}</h2>
-        <p class="mb-4 text-sm">{{ data.description }}</p>
+        <h2 class="text-2xl font-serif text-brown-700 mb-3 truncate hover:text-cafe-brown transition-colors duration-200">
+          {{ product.name }}
+        </h2>
+        <p class="mb-4 text-sm text-brown-600 opacity-80 font-light">
+          {{ product.description || 'A delicious item crafted with love!' }}
+        </p>
         <div class="flex justify-between items-center">
-          <span class="text-lg font-bold">${{ data.price }}</span>
+          <span class="text-lg font-bold text-cafe-brown">${{ product.price }}</span>
           <button
-            class="btn btn-primary px-4 py-2 rounded-lg font-semibold transition-colors duration-300 hover:bg-blue-700"
-            (click)="addToCart(data.id)"
+            class="btn-add-to-cart bg-cafe-yellow text-brown-800 px-4 py-2 rounded-lg font-semibold transition-colors duration-300 hover:bg-cafe-orange hover:text-white"
+            (click)="addToCart(product.id)"
           >
-            Add To Cart
+            Add to Cart
           </button>
         </div>
       </div>
     </div>
   </div>
+
+<!-- Display a message if the cart is empty -->
+<div *ngIf="cartEmpty">
+  <p>Your cart is empty. Please add some products to your cart.</p>
+</div>
+
+<!-- Display the list of products -->
+<div *ngIf="!cartEmpty">
+  <p>Your cart contains items!</p>
+  <!-- You can also list cart items here if needed -->
+</div>
 </div>
