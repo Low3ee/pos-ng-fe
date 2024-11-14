@@ -1,8 +1,44 @@
-<div *ngIf="cart.length == 0">
+<!-- Cart Empty State -->
+<div *ngIf="(cart$()?.length ?? 0) === 0" class="empty-cart">
   <h1>Your cart is empty</h1>
+  <p>Looks like you haven't added anything to your cart yet.</p>
+  <button class="btn-primary" (click)="clearCart()">Start Shopping</button>
 </div>
-<div *ngFor="let item of cart">
-  <div>
-    <h3>{{ item.name }}</h3>
+
+<!-- Cart Items -->
+<div *ngFor="let item of cart$()">
+  <div class="cart-item">
+    <div class="cart-item-details">
+      <h3>{{ item.name }}</h3>
+      <p class="item-quantity">Quantity: {{ item.quantity }}</p>
+      <p class="item-price">Price: ${{ item.price }}</p>
+    </div>
+
+    <div class="cart-item-actions">
+      <button class="btn-remove" (click)="removeItem(item.productId)">Remove</button>
+      <div class="quantity-actions">
+        <input
+          type="number"
+          [(ngModel)]="item.quantity"
+          (ngModelChange)="updateQuantity(item.productId, item.quantity)"
+          min="1"
+          class="quantity-input"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Cart Summary -->
+<div class="cart-summary">
+  <div class="summary-row">
+    <strong>Items in Cart:</strong> {{ cartCount$() }}
+  </div>
+  <div class="summary-row">
+    <strong>Total Price:</strong> ${{ totalPrice$() }}
+  </div>
+  <div class="summary-actions">
+    <button class="btn-clear" (click)="clearCart()">Clear Cart</button>
+    <button class="btn-checkout">Checkout</button>
   </div>
 </div>

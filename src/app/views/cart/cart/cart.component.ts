@@ -1,18 +1,42 @@
 import { Component, OnInit } from '@angular/core';
 import { CartService } from '../../../services/cart/cart.service';
-import { NgFor, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [NgFor, NgIf],
+  imports: [CommonModule, FormsModule],
   templateUrl: './cart.component.html',
-  styleUrl: './cart.component.css',
+  styleUrls: ['./cart.component.css'],
 })
 export class CartComponent implements OnInit {
+  cart$ :any; // signal for cart items
+  cartCount$ :any; // signal for cart count
+  totalPrice$ :any; // signal for total price
+
   constructor(private cartService: CartService) {}
-  cart: any;
+
   ngOnInit(): void {
-    this.cart = this.cartService.getCart() ? this.cartService.getCart() : [];
+    // Now cartService is available, initialize properties here
+    this.cart$ = this.cartService.getCart();  // signal
+    this.cartCount$ = this.cartService.getCartCount();  // signal
+    // this.totalPrice$ = this.cartService.getTotalPrice();  // signal
+  }
+
+  removeItem(itemId: string): void {
+    this.cartService.removeFromCart(itemId);
+    this.cartService.updateCartCount();
+    
+  }
+
+  updateQuantity(itemId: string, quantity: number): void {
+    this.cartService.updateProductQuantity(itemId, quantity);
+    this.cartService.updateCartCount();
+
+  }
+
+  clearCart(): void {
+    this.cartService.clearCart();
   }
 }

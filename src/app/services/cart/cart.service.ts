@@ -1,23 +1,25 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal, WritableSignal } from '@angular/core';
 import { ProductsService } from '../api/products/products.service';
-import { forkJoin, Observable } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CartService {
-  private cart: string[] = [];
-  private productsCache: any[] = []; // Cache products to avoid multiple API calls
+  private cart: { productId: string; quantity: number }[] = [];
+  private productsCache: any[] = [];
+  private _cartCount = signal<number>(this.cart.reduce((count, item) => count + item.quantity, 0));  // signal for cart count
+  private _cartItems = signal<{ productId: string, quantity: number }[]>(this.cart);  // signal for cart items
 
   constructor(private productService: ProductsService) {
-    // Initialize cart and products cache from localStorage on service instantiation
     const storedCart = localStorage.getItem('cart');
     if (storedCart) {
       this.cart = JSON.parse(storedCart);
+      this._cartItems.set(this.cart);  // update cart signal with the stored items
+      this.updateCartCount();
     }
 
-    // Cache product list if available in the local storage or fetch fresh data
     const storedProducts = localStorage.getItem('products');
     if (storedProducts) {
       this.productsCache = JSON.parse(storedProducts);
@@ -26,34 +28,67 @@ export class CartService {
     }
   }
 
-  // Add an item to the cart
-  addToCart(itemId: string): void {
-    // Check if item already exists in the cart to prevent duplicates
-    if (!this.cart.includes(itemId)) {
-      this.cart.push(itemId);
-      localStorage.setItem('cart', JSON.stringify(this.cart));
-    }
-    console.log('Item added to cart:', itemId);
+  // Getter for cart count signal (returns observable)
+  getCartCount(): WritableSignal<number> {
+    return this._cartCount;
   }
 
-  // Get cart items with product details
-  getCart(): Observable<any[]> {
-    if (this.productsCache.length === 0) {
-      // If products are not cached, fetch from API and update cache
-      return this.fetchProducts().pipe(
-        mergeMap(() => this.getCartItems()), // MergeMap will flatten the observable
-        catchError((error) => {
-          console.error('Error fetching products', error);
-          return []; // Return empty array in case of an error
-        })
-      );
+  // Getter for cart items signal (returns observable)
+  getCart(): WritableSignal<{ productId: string, quantity: number }[]> {
+    return this._cartItems;
+  }
+
+  addToCart(itemId: string, quantity: number = 1): void {
+    const existingItem = this.cart.find((item) => item.productId === itemId);
+    if (existingItem) {
+      existingItem.quantity += quantity;
     } else {
-      // If products are cached, directly return cart items
-      return this.getCartItems();
+      this.cart.push({ productId: itemId, quantity });
+    }
+    localStorage.setItem('cart', JSON.stringify(this.cart));
+    this._cartItems.set(this.cart);  // Update cart signal
+    this.updateCartCount();
+  }
+
+  updateProductQuantity(itemId: string, quantity: number): void {
+    const existingItem = this.cart.find((item) => item.productId === itemId);
+    if (existingItem) {
+      existingItem.quantity = quantity;
+      if (existingItem.quantity <= 0) {
+        this.removeFromCart(itemId);
+      } else {
+        localStorage.setItem('cart', JSON.stringify(this.cart));
+        this._cartItems.set(this.cart);  // Update cart signal
+        this.updateCartCount();
+      }
     }
   }
 
-  // Private method to fetch products from API and cache them
+  // // This method calculates the total price of the items in the cart
+  // getTotalPrice(): WritableSignal<number> {
+  //   const total = this.cart.reduce((total, product) => total + product.price * product.quantity, 0);
+  //   const totalPriceSignal = signal<number>(total);
+  //   return totalPriceSignal;
+  // }
+
+  removeFromCart(itemId: string): void {
+    this.cart = this.cart.filter((item) => item.productId !== itemId);
+    localStorage.setItem('cart', JSON.stringify(this.cart));
+    this._cartItems.set(this.cart);  // Update cart signal
+    this.updateCartCount();
+  }
+
+  clearCart(): void {
+    this.cart = [];
+    localStorage.removeItem('cart');
+    this._cartItems.set(this.cart);  
+    this.updateCartCount();
+  }
+
+   updateCartCount(): void {
+    this._cartCount.set(this.cart.reduce((count, item) => count + item.quantity, 0));
+  }
+
   private fetchProducts(): Observable<any> {
     return this.productService.getData().pipe(
       map((products: any[]) => {
@@ -62,54 +97,7 @@ export class CartService {
       }),
       catchError((error) => {
         console.error('Error fetching products from API:', error);
-        throw error; // Rethrow error to handle in getCart()
-      })
-    );
-  }
-
-  // Private method to get cart items from the cached products
-  private getCartItems(): Observable<any[]> {
-    return forkJoin(
-      this.cart.map((itemId) => {
-        return this.productService.getData().pipe(
-          map((products: any[]) =>
-            products.find((product) => product.id === itemId)
-          ),
-          catchError(() => {
-            console.error('Error fetching product with id:', itemId);
-            return []; // Return an empty array if product fetch fails
-          })
-        );
-      })
-    ).pipe(
-      map((productArray) => productArray.filter((product) => product !== null))
-    );
-  }
-
-  // Remove an item from the cart
-  removeFromCart(itemId: string): void {
-    this.cart = this.cart.filter((id) => id !== itemId);
-    localStorage.setItem('cart', JSON.stringify(this.cart));
-    console.log('Item removed from cart:', itemId);
-  }
-
-  // Clear the entire cart
-  clearCart(): void {
-    this.cart = [];
-    localStorage.removeItem('cart');
-    console.log('Cart cleared');
-  }
-
-  // Get the number of items in the cart
-  getCartCount(): number {
-    return this.cart.length;
-  }
-
-  // Get the total price of the items in the cart
-  getTotalPrice(): Observable<number> {
-    return this.getCart().pipe(
-      map((cartItems) => {
-        return cartItems.reduce((total, product) => total + product.price, 0);
+        throw error;
       })
     );
   }

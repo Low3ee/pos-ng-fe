@@ -31,26 +31,41 @@
     <a class="btn btn-ghost text-xl">daisyUI</a>
   </div>
   <div class="navbar-end">
-    <button class="btn btn-ghost btn-circle">
+    <button title="cart" class="btn btn-ghost btn-circle" (click)="viewCart()">
       <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-5 w-5"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-        />
-      </svg>
-    </button>
-    <button class="btn btn-ghost btn-circle">
-      <div class="indicator">
-        <span class="badge badge-xs badge-primary indicator-item"></span>
-      </div>
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-6 w-6 relative"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <!-- Shopping cart outline -->
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M3 3h18l-3 12H6L3 3z"
+      />
+      <!-- Handle of cart -->
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M3 3l1 3h16l1-3"
+      />
+      <!-- Cart wheels -->
+      <circle cx="7" cy="18" r="1" stroke="currentColor" stroke-width="2" fill="currentColor" />
+      <circle cx="17" cy="18" r="1" stroke="currentColor" stroke-width="2" fill="currentColor" />
+      <!-- Optional: Food item as an element inside the cart -->
+      <circle cx="15" cy="12" r="2" stroke="currentColor" stroke-width="2" fill="currentColor" />
+    
+      <!-- Badge for cart count -->
+      <circle cx="17" cy="8" r="7" fill="red" />
+      <text x="17" y="10" text-anchor="middle" stroke="#fff" stroke-width="0.5" dy=".3em" font-size="10">
+        {{cartService.getCartCount()()}}
+      </text>
+    </svg>
     </button>
   </div>
 </div>
+    

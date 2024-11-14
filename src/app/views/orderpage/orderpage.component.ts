@@ -52,11 +52,6 @@ export class CustomerComponent implements OnInit {
     } else {
       this.router.navigate(['/404']);
     }
-
-    // Subscribe to cart updates to check if cart is empty
-    this.cartService.getCart().subscribe((cartItems) => {
-      this.cartEmpty = cartItems.length === 0; // If cart is empty, set cartEmpty to true
-    });
   }
 
   // Add item to the cart
@@ -64,10 +59,6 @@ export class CustomerComponent implements OnInit {
     this.cartService.addToCart(itemId); // Add item to local storage
     console.log('Added to cart');
 
-    // Update cartEmpty status based on cart contents
-    this.cartService.getCart().subscribe((cartItems) => {
-      this.cartEmpty = cartItems.length === 0; // Check if the cart is empty
-    });
   }
 
   // Send order via WebSocket
